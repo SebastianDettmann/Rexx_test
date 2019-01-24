@@ -43,18 +43,22 @@
 
     if(!empty($statement)) {
         $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
-        $thead = [];
-        foreach($rows[0] as $colName => $val){
-            $thead[] = $colName;
+        if(count($rows)) {
+            $thead = [];
+            foreach ($rows[0] as $colName => $val) {
+                $thead[] = $colName;
+            }
+            $fp = fopen('php://output', 'w+');
+            header('Content-Type: text/csv');
+            header('Content-Disposition: attachment; filename="' . $filename . '"');
+            fputcsv($fp, $thead);
+            foreach ($rows as $row) {
+                fputcsv($fp, $row);
+            }
+            fclose($fp);
+        } else {
+            echo 'keine Datensätze gefunden';
         }
-        $fp = fopen('php://output', 'w+');
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="'.$filename.'"');
-        fputcsv($fp, $thead);
-        foreach($rows as $row){
-            fputcsv($fp, $row);
-        }
-        fclose($fp);
     }
 ?>
 
