@@ -4,10 +4,10 @@
     $password = 'root';
     $database = 'rexx_test';
 
-    $filename = "customer_sales_" . time() . ".csv";
-
     $start = $_POST["start"];
     $end = $_POST["end"];
+
+    $filename = 'customer_sales_' . $start . '_' . $end . '.csv';
 
     try {
         $pdo = new PDO("mysql:dbname=$database;host=$host", "$user", "$password");

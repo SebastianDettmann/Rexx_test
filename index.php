@@ -14,9 +14,9 @@
         <hr />
         <form method="post" action="create_csv.php" >
             <label for="start">Startdatum</label>
-            <input type="date" name="start">
+            <input type="date" name="start" required>
             <label for="start">Enddatum</label>
-            <input type="date" name="end">
+            <input type="date" name="end" required>
             <input type="submit">
         </form>
     </section>
