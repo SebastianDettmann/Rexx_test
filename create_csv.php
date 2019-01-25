@@ -1,17 +1,13 @@
 <?php
-    $host = 'localhost';
-    $user = 'root';
-    $password = 'root';
-    $database = 'rexx_test';
+    $conf = require 'config.php';
+    require 'Connection.php';
 
     $start = $_POST["start"];
     $end = $_POST["end"];
-
     $filename = 'customer_sales_' . $start . '_' . $end . '.csv';
 
-    try {
-        $pdo = new PDO("mysql:dbname=$database;host=$host", "$user", "$password");
-        $query =
+    $pdo = Connection::make($conf['db']);
+    $query =
         "SELECT customer.customer_id AS id, 
           CONCAT(
             CASE 
@@ -32,14 +28,12 @@
         GROUP BY id
         ORDER BY lastname;";
 
-        $statement = $pdo->prepare($query);
-        $statement->execute([
-            ':sale_start' => $start,
-            ':sale_end' => $end
-        ]);
-    } catch (Exception $e) {
-        echo 'Fehler: ' . htmlspecialchars($e->getMessage());
-    }
+    $statement = $pdo->prepare($query);
+    $statement->execute([
+        ':sale_start' => $start,
+        ':sale_end' => $end
+    ]);
+
 
     if(!empty($statement)) {
         $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -49,8 +43,8 @@
                 $thead[] = $colName;
             }
             $fp = fopen('php://output', 'w+');
-            header('Content-Type: text/csv');
-            header('Content-Disposition: attachment; filename="' . $filename . '"');
+            header('Content-Type: text/csv; charset=utf-8');
+            header("Content-Disposition: attachment; filename=$filename");
             fputcsv($fp, $thead);
             foreach ($rows as $row) {
                 fputcsv($fp, $row);
@@ -60,5 +54,4 @@
             echo 'keine Datensätze gefunden';
         }
     }
-?>
 
