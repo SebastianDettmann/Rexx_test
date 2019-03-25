@@ -1,7 +1,7 @@
 <?php
     return[
         'db' => [
-            'connection' => 'mysql:dbname=localhost',
+            'connection' => 'mysql:host=localhost',
             'db' => 'rexx_test',
             'user' => 'root',
             'password' => 'root',
